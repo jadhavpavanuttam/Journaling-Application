@@ -1,0 +1,279 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > JournalEntryController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.journalingapp.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: JournalEntryController (com.example.journalingapp.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">JournalEntryController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/56)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.journalingapp.controller;
+&nbsp;
+&nbsp;import com.example.journalingapp.entity.JournalEntry;
+&nbsp;import com.example.journalingapp.entity.User;
+&nbsp;import com.example.journalingapp.service.JournalEntryService;
+&nbsp;import com.example.journalingapp.service.UserService;
+&nbsp;import jakarta.annotation.Nonnull;
+&nbsp;import org.bson.types.ObjectId;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpEntity;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.security.core.Authentication;
+&nbsp;import org.springframework.security.core.context.SecurityContextHolder;
+&nbsp;import org.springframework.transaction.TransactionSystemException;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.*;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;import java.util.stream.Stream;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/journal-entry&quot;)   //used to request the postman / embedded server
+<b class="nc">&nbsp;public class JournalEntryController {</b>
+&nbsp;    //calling sequence : controller --&gt;service --&gt;repositor
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private JournalEntryService journalEntryService;
+&nbsp;    @Autowired
+&nbsp;    private UserService userService;
+&nbsp;
+&nbsp;    @GetMapping
+&nbsp;    public HttpEntity&lt;?&gt; getAllJournalEntriesOfUser() { //localhost:8080/journal GET
+&nbsp;        Authentication authentication = SecurityContextHolder
+<b class="nc">&nbsp;                .getContext()</b>
+<b class="nc">&nbsp;                .getAuthentication();</b>
+<b class="nc">&nbsp;        String name = authentication.getName();</b>
+<b class="nc">&nbsp;        User user = userService.findByUsername(name); //we will be</b>
+<b class="nc">&nbsp;        List&lt;JournalEntry&gt; all = user.getJournalEntries();</b>
+<b class="nc">&nbsp;        if (!all.equals(&quot;&quot;) &amp;&amp; !all.isEmpty()) {</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(all,HttpStatus.OK);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</b>
+&nbsp;
+&nbsp;    }//Ok
+&nbsp;
+&nbsp;    @PostMapping//pathvariable :  postman request catchup in the JSON format and get.
+&nbsp;    public ResponseEntity&lt;?&gt; createEntry(@RequestBody JournalEntry journalEntry) { //localhost:8080/journal POST
+&nbsp;        try {
+&nbsp;            Authentication authentication = SecurityContextHolder
+<b class="nc">&nbsp;                    .getContext()</b>
+<b class="nc">&nbsp;                    .getAuthentication();</b>
+<b class="nc">&nbsp;            String name = authentication.getName();</b>
+<b class="nc">&nbsp;            journalEntryService.saveEntry(journalEntry, name);</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(journalEntry, HttpStatus.CREATED);</b>
+&nbsp;        } catch (Exception e) {
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(HttpStatus.BAD_REQUEST);</b>
+&nbsp;        }
+&nbsp;    }//Ok
+&nbsp;
+&nbsp;    @GetMapping(&quot;id/{myId}&quot;)//findById
+&nbsp;    public ResponseEntity&lt;?&gt; getJournalEntryById(@PathVariable ObjectId myId) {
+&nbsp;        Authentication authentication = SecurityContextHolder
+<b class="nc">&nbsp;                .getContext()</b>
+<b class="nc">&nbsp;                .getAuthentication();</b>
+<b class="nc">&nbsp;        String name = authentication.getName();</b>
+<b class="nc">&nbsp;        User user = userService.findByUsername(name);</b>
+<b class="nc">&nbsp;        List&lt;JournalEntry&gt; collect = user</b>
+<b class="nc">&nbsp;                .getJournalEntries()</b>
+<b class="nc">&nbsp;                .stream()</b>
+<b class="nc">&nbsp;                .filter(x -&gt; x.getId().equals(myId))</b>
+<b class="nc">&nbsp;                .collect(Collectors.toList());</b>
+<b class="nc">&nbsp;        if (!collect.isEmpty()) {</b>
+<b class="nc">&nbsp;            Optional&lt;JournalEntry&gt; entryById = journalEntryService</b>
+<b class="nc">&nbsp;                    .findEntryById(myId);</b>
+<b class="nc">&nbsp;            if (entryById.isPresent())</b>
+<b class="nc">&nbsp;                return new ResponseEntity(entryById.get(), HttpStatus.OK);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @DeleteMapping(&quot;/id/{myId}&quot;) //localhost:8080/journal-entry/id/DBRef[journal_id]
+&nbsp;    public ResponseEntity&lt;?&gt; deleteEntry(@PathVariable ObjectId myId) {
+&nbsp;        Authentication authentication = SecurityContextHolder
+<b class="nc">&nbsp;                .getContext()</b>
+<b class="nc">&nbsp;                .getAuthentication();</b>
+<b class="nc">&nbsp;        String name = authentication.getName();</b>
+<b class="nc">&nbsp;        boolean b = journalEntryService.deleteEntryById(myId, name);</b>
+<b class="nc">&nbsp;        if (b) {</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(HttpStatus.GONE);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</b>
+&nbsp;    }//Ok
+&nbsp;
+&nbsp;    @PutMapping(&quot;id/{id}&quot;)
+&nbsp;    public HttpEntity&lt;Object&gt; updateJournalById(@PathVariable ObjectId id, @RequestBody JournalEntry newEntry) {
+&nbsp;        Authentication authentication = SecurityContextHolder
+<b class="nc">&nbsp;                .getContext()</b>
+<b class="nc">&nbsp;                .getAuthentication();</b>
+<b class="nc">&nbsp;        String name = authentication.getName();</b>
+<b class="nc">&nbsp;        User user = userService.findByUsername(name);</b>
+&nbsp;
+<b class="nc">&nbsp;        List&lt;JournalEntry&gt; collect = user</b>
+<b class="nc">&nbsp;                .getJournalEntries()</b>
+<b class="nc">&nbsp;                .stream()</b>
+<b class="nc">&nbsp;                .filter(a -&gt; a.getId().equals(id))</b>
+<b class="nc">&nbsp;                .collect(Collectors.toList());</b>
+<b class="nc">&nbsp;        if (!collect.isEmpty()) {</b>
+<b class="nc">&nbsp;            Optional&lt;JournalEntry&gt; entryById = journalEntryService.findEntryById(id);</b>
+<b class="nc">&nbsp;            if (entryById.isPresent()) {</b>
+<b class="nc">&nbsp;                JournalEntry old = entryById.get();</b>
+<b class="nc">&nbsp;                old.setDate(LocalDate.now());</b>
+<b class="nc">&nbsp;                old.setTitle(newEntry.getTitle() != null &amp;&amp; !newEntry.getTitle().equals(&quot;&quot;) ? newEntry.getTitle() : old.getTitle());</b>
+<b class="nc">&nbsp;                old.setContent(newEntry.getContent() != null &amp;&amp; !newEntry.getContent().equals(&quot;&quot;) ? newEntry.getContent() : old.getContent());</b>
+<b class="nc">&nbsp;                journalEntryService.saveEntry(old);</b>
+<b class="nc">&nbsp;                return new ResponseEntity&lt;&gt;(old, HttpStatus.OK);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</b>
+&nbsp;    }//Ok
+&nbsp;}
+&nbsp;/*
+&nbsp;if we have any issues in the postman then we will gone on
+&nbsp;mongoDB Atlas for WHITELISTED--&gt;MongoDB Atlas -&gt; Net-work access
+&nbsp;and WHITELIST to the IP ADDRESS WHITELIST.
+&nbsp;@Postmapping : Method inside a controller class should
+&nbsp;be public so that they can be accessed and
+&nbsp;invoke by the spring framework
+&nbsp;or external request.
+&nbsp;
+&nbsp; @RequestBody : it&#39;s like saying &quot;hey spring , please take data from the request
+&nbsp; and turn it into a java object that I can use in code.&quot;
+&nbsp;
+&nbsp; @Pathvariable : in this format :-  localhost:8080/journal/id/2
+&nbsp; @RequestParameter : in this format :-  localhost:8080/journal/id?name=pavan
+&nbsp;
+&nbsp;PATHVARIABLE:- IS USED TO DETERMINE PATH OF THE PARTICULAR API&#39;S
+&nbsp;REQUESTBODY :- IS USED TO DETERMINE POSTMAN REQUESTS FOR PARTICULAR MAPPINGS
+&nbsp;
+&nbsp;Response Entity :it is the communication in between client and servers.which content following things.
+&nbsp;http stats code : 200 it&#39;s meant (5) status codes which is to be used
+&nbsp;http status code we will be achieved with the help of Responce Entity.
+&nbsp;request and responce between client &amp; server.
+&nbsp;1xx(information)
+&nbsp;2xx(successfull) --&gt; 200(Ok) ,201(Created) ,204(No Content)
+&nbsp;3xx(Redirection) --&gt; 301(Moved Permanatly) ,302(Found) ,304(Not modified)
+&nbsp;4xx(Client Error) --&gt; 400(Bad request) ,401(Unauthorized) ,403(Forbidden/permission is not allow)
+&nbsp;5xx(Server side) --&gt; 500(Internal Server Error) ,502(Bad Gateway) ,503(Service Unavailable)
+&nbsp;
+&nbsp;@ResponceEntity --&gt; is the class which is to be used for
+&nbsp;
+&nbsp;//project sequence : controller --&gt;service --&gt;repository
+&nbsp;
+&nbsp;//            journalEntry.setDate(LocalDate.now()); //becouse of we have to add now date on the given entry.
+&nbsp;
+&nbsp;AWS HOSTING:-https://cloud.mongodb.com/v2/6a5b4d2addebb239ab9d49fb#/explorer/6a5b4d55c51e79adf28ecab8/journaling_entries/user_entries/find
+&nbsp;username:pj209380@gmail.com
+&nbsp;password:r2u!e@kZ$RYn35L
+&nbsp;OWAPS:
+&nbsp; */
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-07-31 16:40</div>
+</div>
+</body>
+</html>

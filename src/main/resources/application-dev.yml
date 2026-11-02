@@ -1,0 +1,63 @@
+spring:
+  application:
+    name: JournalingApp
+  data:
+    mongodb:
+      #      uri : mongodb+srv://pj209380_db_user:r2u!e@kZ$RYn35L@cluster1.4c4d8pb.mongodb.net/?appName=Cluster1
+      database: new_journal_app_demo
+      auto-index-creation: true
+  main:
+    lazy-initialization: true
+debug: true
+server:
+  servlet:
+    context-path: /abc
+  port: 8080  # also we have to implement pro
+  host: localhost
+  context-path: /abc
+
+
+#if 'i' want to off the logs for particular package
+logging:
+  level:
+    root: OFF   # off the logs
+
+#weather_api_key: b4aed23dccQEwc3d390 # there is not exist when we have to take in used.
+
+# in case of root package
+#logging:
+#  level:
+#    root: ERROR  # ROOT PACKAGING ALL THE LEVELS WILL PRINT AT HERE.
+
+# when we want used only the given packaging
+#logging:
+#  level:
+#    com:
+#      example:
+#        journalingapp: ERROR
+
+# show logs for error and much savior than this one.
+
+#Application.yml file is given here for
+#spring:
+#  profiles:
+#    active: prod     # localhost:8081/abc/admin/all-users
+#    active: dev      # localhost:8080/abc/admin/all-users
+
+
+#spring.application.name=JournalingApp
+#spring.data.mongodb.database=new_journal_app_demo
+#spring.data.mongodb.host=localhost
+#spring.data.mongodb.port=27017
+#spring.data.mongodb.auto-index-creation=true
+
+#debug=true
+#spring.main.lazy-initialization=true
+#      uri:mongodb+srv://pj209380_db_user:c3lBbHblfeYYOm2T@cluster1.4c4d8pb.mongodb.net/?appName=Cluster1
+#YAML :- Yml
+#program is running on the port : 8081 if it has no becoming then try (8081/journal)-->
+#  context-path :- /abc then API's
+# i.e. localhost : 8081/admin/all-users
+#if not running
+#try this one :- localhost:8081/abc/admin/all-users
+#But application.properties is had the prioritized as compare to application.yml

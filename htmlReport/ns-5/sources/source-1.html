@@ -1,0 +1,201 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > JournalEntryService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.journalingapp.service</a>
+</div>
+
+<h1>Coverage Summary for Class: JournalEntryService (com.example.journalingapp.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">JournalEntryService</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/23)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.journalingapp.service;
+&nbsp;
+&nbsp;import com.example.journalingapp.entity.JournalEntry;
+&nbsp;import com.example.journalingapp.entity.User;
+&nbsp;import com.example.journalingapp.repository.JournalEntryRepo;
+&nbsp;import org.bson.types.ObjectId;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Component
+<b class="nc">&nbsp;public class JournalEntryService {</b>
+&nbsp;    @Autowired
+&nbsp;    private JournalEntryRepo journalEntryRepo;  //variable dependency injection
+&nbsp;    @Autowired
+&nbsp;    private UserService userService;
+&nbsp;
+&nbsp;//        @Transactional //get method to allocate as single
+&nbsp;    public boolean saveEntry(JournalEntry journalEntry, String username) {
+&nbsp;        JournalEntry saved;
+&nbsp;        try {
+<b class="nc">&nbsp;            User user = userService.findByUsername(username);</b>
+<b class="nc">&nbsp;            journalEntry.setDate(LocalDate.now());//  saved at here localdate</b>
+<b class="nc">&nbsp;            saved = journalEntryRepo.save(journalEntry);</b>
+<b class="nc">&nbsp;            user.getJournalEntries().add(saved);</b>
+<b class="nc">&nbsp;            userService.saveUser(user);</b>
+&nbsp;        } catch (Exception ex) {
+<b class="nc">&nbsp;            throw new RuntimeException(ex.getCause());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void saveEntry(JournalEntry journalEntry) {
+&nbsp;        User user;
+<b class="nc">&nbsp;        journalEntryRepo.save(journalEntry);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;JournalEntry&gt; getAll() {
+<b class="nc">&nbsp;        return journalEntryRepo.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Optional&lt;JournalEntry&gt; findEntryById(ObjectId id) {
+<b class="nc">&nbsp;        return journalEntryRepo.findById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;//        @Transactional
+&nbsp;    public boolean deleteEntryById(ObjectId id, String username) {
+<b class="nc">&nbsp;        boolean removed = false;</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            User user = userService.findByUsername(username);</b>
+<b class="nc">&nbsp;            removed = user</b>
+<b class="nc">&nbsp;                    .getJournalEntries()</b>
+<b class="nc">&nbsp;                    .removeIf(x -&gt;</b>
+<b class="nc">&nbsp;                     x.getId().equals(id));</b>
+<b class="nc">&nbsp;            if (removed) {</b>
+<b class="nc">&nbsp;                userService.saveUser(user);// if not properly work change it into saveNewUser(user);</b>
+<b class="nc">&nbsp;                journalEntryRepo.deleteById(id);</b>
+&nbsp;
+&nbsp;            }
+&nbsp;        } catch (Exception ex) {
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;An error Occured,when deleting the entry..&quot; + ex);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return removed;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;JournalEntry&gt; findByUsername(String username) {
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;/*
+&nbsp;controller --&gt; service --&gt; repository
+&nbsp;
+&nbsp;replication :- same data copy on another server is known as replication.
+&nbsp;shading :- our data is stored on destributed manner is known as shading
+&nbsp;
+&nbsp; @Transactional  //provide the properties like all or none --&gt;
+&nbsp; like in the dbms all otherwise rollback...
+&nbsp; applying the peroperties on saveEntry(JournalEntry journalEntry, String userName) method
+&nbsp; */
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-07-31 16:40</div>
+</div>
+</body>
+</html>

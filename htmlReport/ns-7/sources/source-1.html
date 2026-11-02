@@ -1,0 +1,111 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > JournalEntry</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.journalingapp.entity</a>
+</div>
+
+<h1>Coverage Summary for Class: JournalEntry (com.example.journalingapp.entity)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">JournalEntry</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.journalingapp.entity;
+&nbsp;
+&nbsp;import jakarta.annotation.Nonnull;
+&nbsp;import lombok.*;
+&nbsp;import org.bson.types.ObjectId;
+&nbsp;import org.springframework.data.annotation.Id;
+&nbsp;import org.springframework.data.mongodb.core.mapping.Document;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;
+&nbsp;@Document(collection = &quot;journal_entry&quot;) // row in mysql
+&nbsp;@Data  //by default, it will go to ArgsConstructor ,getters,setters and someone Object class methods  .
+&nbsp;@NoArgsConstructor
+&nbsp;public class JournalEntry {
+&nbsp;    @Id  //not compulsory
+&nbsp;    private ObjectId id;
+&nbsp;    @Nonnull
+&nbsp;    private String title;
+&nbsp;    @Nonnull
+&nbsp;    private String content;
+&nbsp;    private LocalDate date;
+&nbsp;}
+&nbsp;/*
+&nbsp;Lombok is the library : is used to reduce boilerplate
+&nbsp;getters and setters
+&nbsp;
+&nbsp;@Data : is equivalent to all the following annotations.
+&nbsp;@Getter
+&nbsp;@Setter
+&nbsp;@NoArgsConstructor
+&nbsp;@AllArgsConstructor
+&nbsp;@ToString
+&nbsp;@EqualsAndHashCode
+&nbsp;@Builder
+&nbsp;
+&nbsp;    so lombok is registers bytecode :-
+&nbsp; getters(),
+&nbsp; setters(),
+&nbsp; toString(),
+&nbsp; equals(),
+&nbsp; hashCode()
+&nbsp; and added all in the (.class file)
+&nbsp; */
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-07-31 16:40</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,218 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > SpringSecurity</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.journalingapp.config</a>
+</div>
+
+<h1>Coverage Summary for Class: SpringSecurity (com.example.journalingapp.config)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SpringSecurity</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/17)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">SpringSecurity$$SpringCGLIB$$0</td>
+  </tr>
+  <tr>
+    <td class="name">SpringSecurity$$SpringCGLIB$$FastClass$$0</td>
+  </tr>
+  <tr>
+    <td class="name">SpringSecurity$$SpringCGLIB$$FastClass$$1</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/17)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.journalingapp.config;
+&nbsp;
+&nbsp;import com.example.journalingapp.service.UserDetailsServiceImpl;
+&nbsp;import jakarta.annotation.Nonnull;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.context.annotation.Bean;
+&nbsp;import org.springframework.context.annotation.Configuration;
+&nbsp;import org.springframework.core.annotation.Order;
+&nbsp;import org.springframework.security.authentication.AuthenticationManager;
+&nbsp;import org.springframework.security.config.Customizer;
+&nbsp;import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+&nbsp;import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+&nbsp;import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+&nbsp;import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+&nbsp;import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+&nbsp;import org.springframework.security.web.SecurityFilterChain;
+&nbsp;
+&nbsp;import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+&nbsp;
+&nbsp;@Configuration
+&nbsp;@EnableWebSecurity
+<b class="nc">&nbsp;public class SpringSecurity {</b>
+&nbsp;    @Autowired
+&nbsp;    private UserDetailsServiceImpl userDetailsService;
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    @Order(1)
+&nbsp;    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+&nbsp;
+<b class="nc">&nbsp;        http</b>
+<b class="nc">&nbsp;                .csrf(AbstractHttpConfigurer::disable)</b>
+<b class="nc">&nbsp;                .authorizeHttpRequests(auth -&gt; auth</b>
+<b class="nc">&nbsp;                        .requestMatchers(&quot;/public/**&quot;).permitAll()</b>
+<b class="nc">&nbsp;                        .requestMatchers(&quot;/journal-entry/**&quot;, &quot;/user-entry/**&quot;).authenticated()</b>
+<b class="nc">&nbsp;                        .requestMatchers(&quot;/admin/**&quot;).hasRole(&quot;ADMIN&quot;) //Wild card pattern</b>
+<b class="nc">&nbsp;                        .anyRequest()</b>
+<b class="nc">&nbsp;                        .authenticated())</b>
+<b class="nc">&nbsp;                .httpBasic(Customizer.withDefaults());</b>
+<b class="nc">&nbsp;        return http.build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public PasswordEncoder passwordEncoder() {
+<b class="nc">&nbsp;        return new BCryptPasswordEncoder();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public AuthenticationManager authenticationManager(
+&nbsp;            AuthenticationConfiguration configuration) throws Exception {
+<b class="nc">&nbsp;        return configuration.getAuthenticationManager();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public DaoAuthenticationProvider authenticationProvider() {
+<b class="nc">&nbsp;        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();</b>
+&nbsp;
+<b class="nc">&nbsp;        provider.setUserDetailsService(userDetailsService);</b>
+<b class="nc">&nbsp;        provider.setPasswordEncoder(passwordEncoder());</b>
+&nbsp;
+<b class="nc">&nbsp;        return provider;</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;/*
+&nbsp;
+&nbsp;1.Arequest entity to represent the user data model.
+&nbsp;2.A reppository UserRepository to interact with MongoDB.
+&nbsp;i.e interfce UserRepository extends MongoRepository&lt;User,ObjectId&gt;{
+&nbsp;User findByUsername(name);}
+&nbsp;3.UserDetailsService implementation to fetch user details.
+&nbsp;4.A Configuration SecurityConfig to integrate with SpringSecurity.
+&nbsp;
+&nbsp;
+&nbsp;CSRF:Cross-Site-Request-Forgery
+&nbsp;which is to used by default protection
+&nbsp;Enable so sprig security aspect give token
+&nbsp;that&#39;s why
+&nbsp;we call http(s-&gt;s.disable()) Or http(AbstractHttpsConfigure::disable())//to disable it.
+&nbsp;
+&nbsp;csrf is a Cyberattack :- when we&#39;re logging on more than two website attacker will attack
+&nbsp;on the banking website through saved cookies.
+&nbsp;when csrf token is enabled so attacker can&#39;t give a chance
+&nbsp;or impossible to Access MALICIOUS website
+&nbsp;with our or accounts as same request, and it will throw forbitten to attacker.
+&nbsp;csrf token is embedded by form , hidden filled and cannot it store onto
+&nbsp;it and malicious website can&#39;t enter with us
+&nbsp;
+&nbsp;http.csrf(AbstractHttpConfigurer::disable);
+&nbsp;new Think to disable spring prevention
+&nbsp;
+&nbsp;Role Based Authentication :- when we will be to add the user , admin or any roles with
+&nbsp;the help of their roles and to give authority over thats.
+&nbsp;eg. Admin can be show the users entries.
+&nbsp; Session :- an api which will be to identfy our entry so that time it&#39;s known as Session
+&nbsp; Session has limited life:-whenever user will logout Session will errased.
+&nbsp; Stateless :- unouthorzed user can get call again and again so it cannot
+&nbsp; be reply or which cannot be meaning or meaning less s known as an stateless
+&nbsp; */
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-07-31 16:40</div>
+</div>
+</body>
+</html>

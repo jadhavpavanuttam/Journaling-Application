@@ -2,3 +2,4 @@ spring:
   profiles:
     #    active: prod,dev     # we have to also initialized this one syntax to activate both but just now my Claude String has some errors since I will try this one after till the last of this project
     active: dev     # localhost:8080/abc/admin/all-users
+# Priorities will to set :- command line --> application.properties --> application.yml

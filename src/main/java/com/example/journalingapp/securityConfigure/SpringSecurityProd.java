@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -20,8 +19,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@Profile("dev")
-public class SpringSecurity {
+@Profile("prod")
+public class SpringSecurityProd {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
@@ -33,9 +32,7 @@ public class SpringSecurity {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/public/**").permitAll()
-                        .requestMatchers("/journal-entry/**", "/user-entry/**")
-                        .authenticated()
-                        .requestMatchers("/admin/**").hasRole("ADMIN") //Wild card pattern
+                        .requestMatchers("/journal-entry/**", "/user-entry/**").anonymous()
                         .anyRequest()
                         .authenticated())
                 .httpBasic(Customizer.withDefaults());

@@ -1,0 +1,101 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > User</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.journalingapp.entity</a>
+</div>
+
+<h1>Coverage Summary for Class: User (com.example.journalingapp.entity)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">User</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.journalingapp.entity;
+&nbsp;
+&nbsp;import jakarta.annotation.Nonnull;
+&nbsp;import lombok.Builder;
+&nbsp;import lombok.Data;
+&nbsp;import lombok.NoArgsConstructor;
+&nbsp;import org.bson.types.ObjectId;
+&nbsp;import org.springframework.data.annotation.Id;
+&nbsp;import org.springframework.data.mongodb.core.index.Indexed;
+&nbsp;import org.springframework.data.mongodb.core.mapping.DBRef;
+&nbsp;import org.springframework.data.mongodb.core.mapping.Document;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Document(collection = &quot;user_entries&quot;) // row in mysql
+&nbsp;@Data  //generate automatically getters and setters
+&nbsp;@Builder  // opposite of --&gt; @NoArgsConstructor because of in concept of testing we will be used builder()
+&nbsp;public class User {
+&nbsp;    @Id
+&nbsp;    private ObjectId id;
+&nbsp;    @Indexed(unique = true)  //username will be unique
+&nbsp;    @Nonnull
+&nbsp;    private String username;
+&nbsp;    @Nonnull
+&nbsp;    private String password;
+&nbsp;    @DBRef  //is used to give reference over DB.
+&nbsp;    public List&lt;JournalEntry&gt; journalEntries = new ArrayList&lt;&gt;();
+&nbsp;    private List&lt;String&gt; roles;//user entity
+&nbsp;}
+&nbsp;/*
+&nbsp;transaction :- is used to define the properties of ACID.
+&nbsp;*/
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-07-31 16:40</div>
+</div>
+</body>
+</html>

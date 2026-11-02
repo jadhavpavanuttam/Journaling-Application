@@ -1,6 +1,7 @@
 spring:
   application:
     name: JournalingApp
+#    JournalApp: DEBUG
   data:
     mongodb:
       uri: mongodb+srv://pj209380_db_user:c3lBbHblfeYYOm2T@cluster1.4c4d8pb.mongodb.net/?appName=Cluster1
@@ -12,7 +13,6 @@ debug: true
 server:
   servlet:
     context-path: /abc
-# port: 8081
-# host: localhost
-# context-path: /abc
+    port: 8081
+    host: localhost
 # whenever I will be deployed this project on the server that time used over this linked to access it.
